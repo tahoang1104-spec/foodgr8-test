@@ -8,37 +8,43 @@ st.set_page_config(
     layout="wide"
 )
 
-# ========== HEADER ==========
-st.title("🍜 FoodGR8 – Nhận diện món ăn Việt Nam")
-st.markdown(
-    "Upload ảnh món ăn và nhấn **Detect** để nhận diện (model sẽ gắn sau)."
-)
+# ========== CENTER CONTAINER ==========
+left, center, right = st.columns([1, 3, 1])
 
-st.divider()
-
-# ========== UPLOAD ==========
-uploaded_file = st.file_uploader(
-    "📤 Upload ảnh món ăn",
-    type=["jpg", "jpeg", "png"]
-)
-
-# ========== DISPLAY ==========
-if uploaded_file:
-    image = Image.open(uploaded_file)
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.subheader("📷 Ảnh gốc")
-        st.image(image, use_column_width=True)
-
-    with col2:
-        st.subheader("🧠 Kết quả")
-        st.warning("⚠️ Chưa gắn model YOLO")
-        st.image(image, use_column_width=True)
+with center:
+    # ===== HEADER =====
+    st.markdown("<h1 style='text-align: center;'>🍜 FoodGR8</h1>", unsafe_allow_html=True)
+    st.markdown(
+        "<p style='text-align: center;'>Nhận diện món ăn Việt Nam từ hình ảnh</p>",
+        unsafe_allow_html=True
+    )
 
     st.divider()
-    st.button("🚀 Detect")
 
-else:
-    st.info("👆 Vui lòng upload ảnh để bắt đầu")
+    # ===== UPLOAD =====
+    uploaded_file = st.file_uploader(
+        "📤 Upload ảnh món ăn",
+        type=["jpg", "jpeg", "png"]
+    )
+
+    # ===== DISPLAY =====
+    if uploaded_file:
+        image = Image.open(uploaded_file)
+
+        col1, col2 = st.columns(2, gap="large")
+
+        with col1:
+            st.markdown("<h3 style='text-align: center;'>📷 Ảnh gốc</h3>", unsafe_allow_html=True)
+            st.image(image, use_column_width=True)
+
+        with col2:
+            st.markdown("<h3 style='text-align: center;'>🧠 Kết quả</h3>", unsafe_allow_html=True)
+            st.warning("Chưa gắn model YOLO")
+            st.image(image, use_column_width=True)
+
+        st.divider()
+
+        # ===== CENTER BUTTON =====
+        btn_left, btn_center, btn_right = st.columns([1, 2, 1])
+        with btn_center:
+            st.button("🚀 D
