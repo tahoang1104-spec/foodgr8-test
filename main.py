@@ -1,5 +1,6 @@
 import streamlit as st
 from PIL import Image
+import base64
 
 # ========== CONFIG ==========
 st.set_page_config(
@@ -8,46 +9,67 @@ st.set_page_config(
     layout="wide"
 )
 
-# ========== CENTER CONTAINER ==========
-left, center, right = st.columns([1, 3, 1])
+# ========== LOAD IMAGE ==========
+def get_base64_image(path):
+    with open(path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
 
-with center:
-    # ===== HEADER =====
-    st.markdown("<h1 style='text-align: center;'>🍜 FoodGR8</h1>", unsafe_allow_html=True)
-    st.markdown(
-        "<p style='text-align: center;'>Nhận diện món ăn Việt Nam từ hình ảnh</p>",
-        unsafe_allow_html=True
-    )
+banner_base64 = get_base64_image("assets/banner.jpg")
 
-    st.divider()
+# ========== HERO SECTION ==========
+st.markdown(
+    f"""
+    <style>
+    .hero {{
+        background-image: url("data:image/jpg;base64,{banner_base64}");
+        background-size: cover;
+        background-position: center;
+        padding: 100px 20px;
+        border-radius: 12px;
+        color: white;
+        text-align: center;
+    }}
+    .hero h1 {{
+        font-size: 48px;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+    }}
+    .hero p {{
+        font-size: 20px;
+        text-shadow: 1px 1px 6px rgba(0,0,0,0.6);
+    }}
+    </style>
 
-    # ===== UPLOAD =====
-    uploaded_file = st.file_uploader(
-        "📤 Upload ảnh món ăn",
-        type=["jpg", "jpeg", "png"]
-    )
+    <div class="hero">
+        <h1>Welcome to FoodGR8 🍜</h1>
+        <p>Nhận diện món ăn Việt Nam từ hình ảnh của bạn</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-    # ===== DISPLAY =====
-    if uploaded_file:
-        image = Image.open(uploaded_file)
+st.divider()
 
-        col1, col2 = st.columns(2, gap="large")
+# ========== UPLOAD ==========
+uploaded_file = st.file_uploader(
+    "📤 Upload ảnh món ăn",
+    type=["jpg", "jpeg", "png"]
+)
 
-        with col1:
-            st.markdown("<h3 style='text-align: center;'>📷 Ảnh gốc</h3>", unsafe_allow_html=True)
-            st.image(image, use_column_width=True)
+if uploaded_file:
+    image = Image.open(uploaded_file)
 
-        with col2:
-            st.markdown("<h3 style='text-align: center;'>🧠 Kết quả</h3>", unsafe_allow_html=True)
-            st.warning("Chưa gắn model YOLO")
-            st.image(image, use_column_width=True)
+    col1, col2 = st.columns(2)
 
-        st.divider()
+    with col1:
+        st.subheader("📷 Ảnh gốc")
+        st.image(image, use_column_width=True)
 
-        # ===== CENTER BUTTON =====
-        btn_left, btn_center, btn_right = st.columns([1, 2, 1])
-        with btn_center:
-            st.button("🚀 Detect", use_container_width=True)
+    with col2:
+        st.subheader("🧠 Kết quả")
+        st.warning("Chưa gắn model YOLO")
+        st.image(image, use_column_width=True)
 
-    else:
-        st.info("👆 Upload ảnh để bắt đầu")
+    st.button("🚀 Detect", use_container_width=True)
+else:
+    st.info("👆 Upload ảnh để bắt đầu")
