@@ -1,75 +1,91 @@
 import streamlit as st
-from PIL import Image
 import base64
 
-# ========== CONFIG ==========
+# ========== PAGE CONFIG ==========
 st.set_page_config(
     page_title="FoodGR8",
     page_icon="🍜",
     layout="wide"
 )
 
-# ========== LOAD IMAGE ==========
-def get_base64_image(path):
+# ========== LOAD BANNER IMAGE ==========
+def img_to_base64(path):
     with open(path, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
-banner_base64 = get_base64_image("assets/banner.png")
+banner_base64 = img_to_base64("assets/banner.png")
 
-# ========== HERO SECTION ==========
+# ========== HERO / BANNER ==========
 st.markdown(
     f"""
     <style>
     .hero {{
+        position: relative;
+        height: 320px;
         background-image: url("data:image/png;base64,{banner_base64}");
         background-size: cover;
         background-position: center;
-        padding: 100px 20px;
-        border-radius: 12px;
+        border-radius: 14px;
+        margin-bottom: 2rem;
+    }}
+
+    .overlay {{
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        border-radius: 14px;
+    }}
+
+    .hero-content {{
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         color: white;
         text-align: center;
     }}
-    .hero h1 {{
-        font-size: 48px;
-        margin-bottom: 10px;
-        text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+
+    .hero-content h1 {{
+        font-size: 46px;
+        margin-bottom: 8px;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
     }}
-    .hero p {{
+
+    .hero-content p {{
         font-size: 20px;
-        text-shadow: 1px 1px 6px rgba(0,0,0,0.6);
+        text-shadow: 1px 1px 6px rgba(0,0,0,0.7);
     }}
     </style>
 
     <div class="hero">
-        <h1>Welcome to FoodGR8 🍜</h1>
-        <p>Nhận diện món ăn Việt Nam từ hình ảnh của bạn</p>
+        <div class="overlay"></div>
+        <div class="hero-content">
+            <h1>Welcome to FoodGR8 🍜</h1>
+            <p>An easy way to detect Vietnamese dishes!</p>
+        </div>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-st.divider()
+# ========== IMAGE UPLOAD SECTION ==========
+st.markdown("## Image Upload 🖼️")
 
-# ========== UPLOAD ==========
+with st.expander("📌 Instructions: Image uploading", expanded=True):
+    st.markdown(
+        """
+        - Upload **PNG / JPG / JPEG** images  
+        - Maximum size: **200MB**  
+        - The image will be used for food detection (coming soon)
+        """
+    )
+
 uploaded_file = st.file_uploader(
-    "📤 Upload ảnh món ăn",
-    type=["jpg", "jpeg", "png"]
+    "Choose a picture",
+    type=["png", "jpg", "jpeg"]
 )
 
 if uploaded_file:
-    image = Image.open(uploaded_file)
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.subheader("📷 Ảnh gốc")
-        st.image(image, use_column_width=True)
-
-    with col2:
-        st.subheader("🧠 Kết quả")
-        st.warning("Chưa gắn model YOLO")
-        st.image(image, use_column_width=True)
-
-    st.button("🚀 Detect", use_container_width=True)
-else:
-    st.info("👆 Upload ảnh để bắt đầu")
+    st.success("✅ Image uploaded successfully")
