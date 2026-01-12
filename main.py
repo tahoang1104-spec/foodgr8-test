@@ -14,14 +14,14 @@ def get_base64_image(path):
     with open(path, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
-banner_base64 = get_base64_image("assets/banner.jpg")
+banner_base64 = get_base64_image("assets/banner.png")
 
 # ========== HERO SECTION ==========
 st.markdown(
     f"""
     <style>
     .hero {{
-        background-image: url("data:image/jpg;base64,{banner_base64}");
+        background-image: url("data:image/png;base64,{banner_base64}");
         background-size: cover;
         background-position: center;
         padding: 100px 20px;
