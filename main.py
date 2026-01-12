@@ -47,4 +47,7 @@ with center:
         # ===== CENTER BUTTON =====
         btn_left, btn_center, btn_right = st.columns([1, 2, 1])
         with btn_center:
-            st.button("🚀 D
+            st.button("🚀 Detect", use_container_width=True)
+
+    else:
+        st.info("👆 Upload ảnh để bắt đầu")
